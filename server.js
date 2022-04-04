@@ -10,7 +10,7 @@ client.once('ready', async () => {
   console.log('Ready!');
 
   try {
-    const webhook = new WebhookClient({ id: process.env.WEBHOOK_ID, token: process.env.WEBOOK_TOKEN });
+    const webhook = new WebhookClient({ id: process.env.WEBHOOK_ID, token: process.env.WEBHOOK_TOKEN });
 
     await cron.schedule('00 10 * * Mon-Fri', () => {
       console.log('Trigger standup meeting schedule');
