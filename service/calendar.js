@@ -17,8 +17,10 @@ function checkTodayIsHoliday() {
             }
         }
     ).then(function (response) {
-        console.log(response.data.items.length > 0);
-        response.data.items.length > 0;
+        //todo: return embedded message
+        const printText = 'วันนี้เป็นวัน' + response.data.items[0].summary
+        console.log(printText);
+        return response.data.items.length > 0;
     }).catch(function (error) {
         console.log(error);
     });
