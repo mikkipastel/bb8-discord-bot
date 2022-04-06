@@ -26,6 +26,34 @@ function checkTodayIsHoliday() {
     });
 }
 
+function checkTodayEvent() {
+    const nowDateTime = (new Date()).toISOString();
+    return axios.get(
+        getGoogleCalendarApiPath(process.env.CALENDAR_YAVIN_TEAM),
+        {
+            params: {
+                orderBy: 'startTime',
+                singleEvents: true,
+                key: process.env.GOOGLE_API_KEY,
+                timeMin:nowDateTime
+            }
+        }
+    ).then(function (response) {
+        console.log(response.data.items);
+        const nowDate = nowDateTime.split('T')[0];
+        if (response.data.items.length > 0 && nowDate == response.data.items[0].start.date) {
+            response.data.items.forEach(function (item) {
+                //todo: return embedded message
+                const printText = item.summary + ' : ' + item.start.date + ' - ' + item.end.date;
+                console.log(printText);
+            });
+        }
+    }).catch(function (error) {
+        console.log(error);
+    });
+}
+
 module.exports = {
-    checkTodayIsHoliday
+    checkTodayIsHoliday,
+    checkTodayEvent
 }
