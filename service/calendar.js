@@ -5,6 +5,7 @@ function getGoogleCalendarApiPath(calendarId) {
 }
 
 function checkTodayIsHoliday() {
+    const nowDateTime = (new Date()).toISOString();
     return axios.get(
         getGoogleCalendarApiPath(process.env.CALENDAR_HOLIDAY_IN_BNAGKOK_ID),
         {
@@ -12,15 +13,21 @@ function checkTodayIsHoliday() {
                 orderBy: 'startTime',
                 singleEvents: true,
                 key: process.env.GOOGLE_API_KEY,
-                timeMin: (new Date()).toISOString(),
+                timeMin: nowDateTime,
                 maxResults: 1
             }
         }
     ).then(function (response) {
-        //todo: return embedded message
-        const printText = 'วันนี้เป็นวัน' + response.data.items[0].summary
-        console.log(printText);
-        return response.data.items.length > 0;
+        const nowDate = nowDateTime.split('T')[0];
+        if (response.data.items.length > 0 && nowDate == response.data.items[0].start.date) {
+            //todo: return embedded message
+            const printText = 'วันนี้เป็นวัน' + response.data.items[0].summary
+            console.log(printText);
+            return true;
+        } else {
+            console.log('Today is not Holiday');
+            return false;
+        }
     }).catch(function (error) {
         console.log(error);
     });
