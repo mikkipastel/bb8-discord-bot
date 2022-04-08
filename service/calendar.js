@@ -6,7 +6,7 @@ function getGoogleCalendarApiPath(calendarId) {
 
 function checkTodayIsHoliday() {
     const nowDateTime = (new Date()).toISOString();
-    return axios.get(
+    axios.get(
         getGoogleCalendarApiPath(process.env.CALENDAR_HOLIDAY_IN_BNAGKOK_ID),
         {
             params: {
@@ -23,10 +23,10 @@ function checkTodayIsHoliday() {
             //todo: return embedded message
             const printText = 'วันนี้เป็นวัน' + response.data.items[0].summary
             console.log(printText);
-            return true;
+            true;
         } else {
             console.log('Today is not Holiday');
-            return false;
+            false;
         }
     }).catch(function (error) {
         console.log(error);
