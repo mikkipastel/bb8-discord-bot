@@ -12,6 +12,7 @@ client.once('ready', async () => {
   console.log('Ready!');
 
   try {
+    const channel = client.channels.cache.get(process.env.GENERAL_CHANNEL_ID);
     const webhook = new WebhookClient({ id: process.env.WEBHOOK_ID, token: process.env.WEBHOOK_TOKEN });
 
     await cron.schedule('00 10 * * Mon-Fri', () => {
@@ -20,7 +21,8 @@ client.once('ready', async () => {
         console.log('Today is Holiday');
       } else {
         console.log('Trigger standup meeting schedule');
-        webhook.send('@everyone, standup meeting', {});
+        channel.send('@everyone, standup meeting', {});
+        calendar.checkTodayEvent(webhook);
       }
     });
     
