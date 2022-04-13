@@ -15,9 +15,6 @@ client.once('ready', async () => {
     const channel = client.channels.cache.get(process.env.GENERAL_CHANNEL_ID);
     const webhook = new WebhookClient({ id: process.env.WEBHOOK_ID, token: process.env.WEBHOOK_TOKEN });
 
-    calendar.checkTodayIsHoliday(webhook);
-    calendar.checkTodayEvent(webhook);
-
     await cron.schedule('00 10 * * Mon-Fri', async () => {
       calendar.checkTodayIsHoliday(webhook);
       calendar.checkTodayEvent(webhook);
