@@ -15,17 +15,14 @@ client.once('ready', async () => {
     const channel = client.channels.cache.get(process.env.GENERAL_CHANNEL_ID);
     const webhook = new WebhookClient({ id: process.env.WEBHOOK_ID, token: process.env.WEBHOOK_TOKEN });
 
-    await cron.schedule('00 10 * * Mon-Fri', () => {
-      const isHoliday = calendar.checkTodayIsHoliday();
-      if (isHoliday) {
-        console.log('Today is Holiday');
-      } else {
-        console.log('Trigger standup meeting schedule');
-        channel.send('@everyone, standup meeting', {});
-        calendar.checkTodayEvent(webhook);
-      }
+    calendar.checkTodayIsHoliday(webhook);
+    calendar.checkTodayEvent(webhook);
+
+    await cron.schedule('00 10 * * Mon-Fri', async () => {
+      calendar.checkTodayIsHoliday(webhook);
+      calendar.checkTodayEvent(webhook);
     });
-    
+
   } catch (error) {
     console.error('Error trying to send a message: ', error);
   }

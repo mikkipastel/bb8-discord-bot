@@ -36,6 +36,7 @@ function checkTodayIsHoliday(webhook) {
             true;
         } else {
             console.log('Today is not Holiday');
+            webhook.send('@everyone, standup meeting', {});
             false;
         }
     }).catch(function (error) {
