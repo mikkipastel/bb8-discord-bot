@@ -30,7 +30,7 @@ function checkTodayIsHoliday(webhook) {
         const nowDate = timeMin.split('T')[0];
         if (response.data.items.length > 0 && nowDate == response.data.items[0].start.date) {
             //todo: return embedded message
-            const printText = 'วันนี้เป็นวัน' + response.data.items[0].summary
+            const printText = 'วันนี้เป็น' + response.data.items[0].summary
             console.log(printText);
             webhook.send(printText, {});
             true;
