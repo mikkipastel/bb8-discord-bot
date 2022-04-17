@@ -1,6 +1,6 @@
 {
   "name": "bb8-discord-bot",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Discord bot for team",
   "main": "server.js",
   "scripts": {
