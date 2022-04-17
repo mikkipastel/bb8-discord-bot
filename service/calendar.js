@@ -33,11 +33,9 @@ function checkTodayIsHoliday(webhook) {
             const printText = 'วันนี้เป็น' + response.data.items[0].summary
             console.log(printText);
             webhook.send(printText, {});
-            true;
         } else {
             console.log('Today is not Holiday');
             webhook.send('@everyone, standup meeting', {});
-            false;
         }
     }).catch(function (error) {
         console.log(error);
