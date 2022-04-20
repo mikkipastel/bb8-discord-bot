@@ -8,6 +8,10 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 const calendar = require('./service/calendar');
 
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v9');
+
 client.once('ready', async () => {
   console.log('Ready!');
 
@@ -21,6 +25,29 @@ client.once('ready', async () => {
 
   } catch (error) {
     console.error('Error trying to send a message: ', error);
+  }
+});
+
+const commands = [
+	new SlashCommandBuilder().setName('ping').setDescription('Replies with pong!'),
+  new SlashCommandBuilder().setName('holiday').setDescription('Replies with 10 holiday date!')
+].map(command => command.toJSON());
+
+const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_BOT_TOKEN);
+rest.put(Routes.applicationGuildCommands(process.env.BOT_CLIENT_ID, process.env.SERVER_ID), { body: commands })
+  .then(() => console.log('Successfully registered application commands.'))
+  .catch(console.error);
+
+client.on('interactionCreate', async interaction => {
+  if (!interaction.isCommand()) return;
+  
+  const { commandName } = interaction;
+      
+  if (commandName === 'ping') {
+    const timeTaken = Date.now() - interaction.createdTimestamp;
+    await interaction.reply(`Pong! This message had a latency of ${timeTaken}ms.`);
+  } else if (commandName === 'holiday') {
+    await interaction.reply(await calendar.getHolidayList());
   }
 });
 

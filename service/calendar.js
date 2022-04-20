@@ -75,7 +75,41 @@ function checkTodayEvent(webhook) {
     });
 }
 
+function getHolidayList() {
+    const nowDateTime = (new Date()).toISOString();
+
+    return axios.get(
+        getGoogleCalendarApiPath(process.env.CALENDAR_HOLIDAY_IN_BNAGKOK_ID),
+        {
+            params: {
+                orderBy: 'startTime',
+                singleEvents: true,
+                key: process.env.GOOGLE_API_KEY,
+                timeMin: nowDateTime,
+                maxResults: 10
+            }
+        }
+    ).then(function (response) {
+        console.log(response.data.items);
+        if (response.data.items.length > 0) {
+            var printText = "";
+            console.log(response.data.items);
+            response.data.items.forEach(function (item, index) {
+                printText += '[ ' + item.start.date  + ' ] ' + item.summary;
+                if (index < response.data.items.length - 1) {
+                    printText += '\n';
+                }
+            });
+            console.log(printText);
+            return printText;
+        }
+    }).catch(function (error) {
+        console.log(error);
+    });
+}
+
 module.exports = {
     checkTodayIsHoliday,
-    checkTodayEvent
+    checkTodayEvent,
+    getHolidayList
 }
